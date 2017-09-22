@@ -5,9 +5,8 @@
 using namespace std;
 const int M=4; 
 
-int x, o, k;
+int x=0, o, k,d,p,c;
 
-x=0;
 
 double I[M][M],t[M],Kp=1,Kd=1,Ki=1,Iz=25;
 
@@ -29,12 +28,49 @@ double fatpoint(double point)
 
 int main()
 {
+ cout << "o=";
+ cin >> o;
+ cout << "k=";
+ cin >> k;
+ p=int (o/90+1);             //p-обмотка, на которой в данное время находимся
+ d=0;                        //d-кол-во шагов на эту обмотку
 
-cout << "zaday nachalo ->" ;
-cin >> o;
+ if (k>o)                 // для направления вперед цикл (я все-таки добил эту идею)
+{
+x=k-o;
+cout << "napravlenie vpered"<< endl;
+while (p< int(k/90+1))                       //пока текущая обмотка не дойдет до обмотки конечной
+{ 
+d=90*p-o;                                                         
+o=o+d;                                                           // прошлое положение становится новым
+cout << "na obmotke "<< p << " - " << d << " shagov"<< endl;
+p=p+1;                                                           
+}
+d=k-o;                                                          
+cout << "na obmotke "<< p << " - " << d << " shagov"<< endl;
+o=k-x;                                         
+}
 
-cout << "zaday konec ->" ;
-cin >> k;
+
+
+
+ else if (o>k)           //и для направления назад, принцип тот же
+{
+x=o-k;
+ cout << "napravlenie nazad"<< endl;
+while (p> int(k/90+1)) 
+{
+d=o-90*(p-1);
+o=o-d;
+cout << "na obmotke "<< p << " - " << d << " shagov"<< endl;
+p=p-1;
+}
+d=o-k;
+cout << "na obmotke "<< p << " - " << d << " shagov"<< endl;
+ }
+  
+ 
+//return 0  ;
 
 if(0>x<360) {
 if (o>k) x = o - k;
@@ -43,12 +79,12 @@ else if (k==o) cout << "otdex"<< endl;
 
 cout << "molodec! x="<< x << endl;
 
-if (x<90) o=1;
-else if (x<180) o=2;
-else if (x<270) o=3;
-else if (x<359) o=4;
+if (x<90) c=1;
+else if (x<180) c=2;
+else if (x<270) c=3;
+else if (x<359) c=4;
 
-cout << "obmotok stoka:"<< o << endl;
+cout << "obmotok stoka:"<< c << endl;
 
 
 	int i,j;
@@ -67,7 +103,7 @@ cout << "obmotok stoka:"<< o << endl;
 
     propor=Iz-I[M-1][0];
     cout <<"propor= "<<propor <<endl;
-    if (propor<eps) return 0;
+    if ((propor<eps) && (propor>-eps)) return 0;
 
     for(j=1;j<M;j++)
 	{
@@ -101,4 +137,5 @@ cout << "obmotok stoka:"<< o << endl;
     output=Kp*propor+Ki*integ+Kd*differ;
     cout <<"output= "<<output <<endl;
     return 0;
+}
 }
